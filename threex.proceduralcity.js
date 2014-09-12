@@ -26,7 +26,7 @@ THREEx.ProceduralCity	= function(){
 	var shadow	= new THREE.Color( 0x303050 )
 	var lights = [];
 	var cityGeometry= new THREE.Geometry();
-	for( var i = 0; i < 20000; i ++ ){
+	for( var i = 0; i < 20; i ++ ){
 
 		// put a random position
 		buildingMesh.position.x	= Math.floor( Math.random() * 200 - 100 ) * 10;
@@ -51,7 +51,7 @@ THREEx.ProceduralCity	= function(){
 		var topColor	= baseColor.clone().multiply( light );
 		var bottomColor	= baseColor.clone().multiply( shadow );
 		// set .vertexColors for each face
-		var geometry	= buildingMesh.geometry;		
+		var geometry	= buildingMesh.geometry;
 		for ( var j = 0, jl = geometry.faces.length; j < jl; j ++ ) {
 			if ( j === 2 ) {
 				// set face.vertexColors on root face

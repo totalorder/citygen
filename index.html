@@ -1,5 +1,7 @@
 <!doctype html>
 <script src='three.min.js'></script>
+<script src='Loader.js'></script>
+<script src='ColladaLoader.js'></script>
 <script src='FirstPersonControls.js'></script>
 <script src='threex.proceduralcity.js'></script>
 <body style='margin: 0px; background-color: #111133; overflow: hidden;'><script>
@@ -39,7 +41,27 @@
     for( var iLights = 0; iLights < city.lights.length; iLights++) {
         scene.add(city.lights[iLights]);
     }
-	scene.add(city);
+//	scene.add(city);
+
+	    var models = [
+        {name:"forvaltningshuset", x:80,z:320},
+        {name:"aulanordica", x:370, z:390},
+        {name:"univ", x:410, z:390},
+        {name:"Lindellhallen", x:400, z:180},
+        {name:"beteendevetarhuset", x:550, z:50},
+        {name:"sam", x:210, z:150}
+    ];
+    models.forEach(function (model) {
+        var loader = new THREE.ColladaLoader();
+        loader.load('./models/'+model.name+'.dae', function (result) {
+            var dae = result.scene;
+            dae.rotation.x = Math.PI/2 * 3;
+            dae.position.x = model.x;
+            dae.position.z = model.z;
+            dae.updateMatrix();
+            scene.add(dae);
+        });
+    });
 
 	var addNeighbouringCityParts = function (x, z) {
 		function addNewCityPart(x, z) {
