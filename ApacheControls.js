@@ -54,6 +54,7 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
     this.viewHalfX = 0;
     this.viewHalfY = 0;
+    this.throttle = 1;
 
     if ( this.domElement !== document ) {
 
@@ -147,20 +148,22 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
         switch ( event.keyCode ) {
 
-            case 38: /*up*/
-            case 87: /*W*/ this.moveForward = true; break;
+            case 38: /*up*/ this.moveForward = true; break;
+//            case 87: /*W*/ this.moveForward = true; break;
 
             case 37: this.moveLeft = true; break;/*left*/
 //            case 65: /*A*/ this.moveLeft = true; break;
 
-            case 40: /*down*/
-            case 83: /*S*/ this.moveBackward = true; break;
+            case 40: /*down*/ this.moveBackward = true; break;
+//            case 83: /*S*/ this.moveBackward = true; break;
 
             case 39: this.moveRight = true; break; /*right*/
 //            case 68: /*D*/ this.moveRight = true; break;
 
             case 65: /*A*/ this.panLeft = true; break;
             case 68: /*D*/ this.panRight = true; break;
+
+            case 87: /*W*/ this.throttleUp = true; break; /*right*/
 
             case 82: /*R*/ this.moveUp = true; break;
             case 70: /*F*/ this.moveDown = true; break;
@@ -175,16 +178,18 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
         switch( event.keyCode ) {
 
-            case 38: /*up*/
-            case 87: /*W*/ this.moveForward = false; break;
+            case 38: /*up*/ this.moveForward = false; break;
+//            case 87: /*W*/ this.moveForward = false; break;
 
             case 37: this.moveLeft = false; break; /*left*/
 //            case 65: /*A*/ this.moveLeft = false; break;
 
-            case 40: /*down*/
-            case 83: /*S*/ this.moveBackward = false; break;
+            case 40: /*down*/ this.moveBackward = false; break;
+//            case 83: /*S*/ this.moveBackward = false; break;
 
             case 39: this.moveRight = false; break; /*right*/
+
+            case 87: /*W*/this.throttleUp = false; break; /*right*/
 //            case 68: /*D*/ this.moveRight = false; break;
 
             case 82: /*R*/ this.moveUp = false; break;
@@ -290,7 +295,22 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 //            this.look.z -= rotationSpeed * delta;
         }
 
+        var throttleSpeed = 20;
+        if (this.throttleUp) {
+            this.throttle += throttleSpeed * delta;
+            if (this.throttle > 50) {
+                this.throttle = 50;
+            }
+        } else {
+            this.throttle -= throttleSpeed * delta;
+            if (this.throttle < 0) {
+                this.throttle = 0;
+            }
+        }
+        console.log(this.throttle);
 
+        this.object.translateOnAxis(new THREE.Vector3(0, 1, 0), this.throttle * delta);
+        this.object.position.y -= delta * 10;
 
         targetPosition.x = position.x + Math.sin( this.look.x ) * Math.cos( this.look.y );
         targetPosition.y = position.y + Math.cos( this.look.x );
