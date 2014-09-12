@@ -3,6 +3,8 @@
 <script src='Loader.js'></script>
 <script src='ColladaLoader.js'></script>
 <script src='FirstPersonControls.js'></script>
+<script src='ApacheControls.js'></script>
+<!--<script src='FirstPersonControls.js'></script>-->
 <script src='threex.proceduralcity.js'></script>
 <body style='margin: 0px; background-color: #111133; overflow: hidden;'><script>
 	var updateFcts	= [];
@@ -17,7 +19,7 @@
 	//		comment								//
 	//////////////////////////////////////////////////////////////////////////////////
 
-	var camera		= new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.01, 3000)
+	var camera		= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 3000)
 	camera.position.y	= 80
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -27,8 +29,9 @@
 	light.position.set( 0.75, 1, 0.25 );
 	scene.add( light );
 
+    var gridSize = 1000;
 	var material	= new THREE.MeshBasicMaterial({ color: 0x101018 })
-	var geometry	= new THREE.PlaneGeometry( 2000, 2000 )
+	var geometry	= new THREE.PlaneGeometry( gridSize, gridSize )
 	var plane	= new THREE.Mesh( geometry, material );
 	plane.rotation.x= - 90 * Math.PI / 180;
 	scene.add( plane );
@@ -66,8 +69,8 @@
 	var addNeighbouringCityParts = function (x, z) {
 		function addNewCityPart(x, z) {
 			var newcity = new THREE.Mesh(city.geometry, city.material);
-			newcity.position.x = x * 2000;
-			newcity.position.z = z * 2000;
+			newcity.position.x = x * gridSize;
+			newcity.position.z = z * gridSize;
 			scene.add(newcity)
 		}
 
@@ -107,8 +110,8 @@
 	updateFcts.push(function () {
 		var cameraX = camera.position.x;
 		var cameraZ = camera.position.z;
-		var x = Math.round((cameraX / 2000));
-		var z = Math.round((cameraZ / 2000));
+		var x = Math.round((cameraX / gridSize));
+		var z = Math.round((cameraZ / gridSize));
 
 
 		if (x != lastPosition.x || z != lastPosition.z) {

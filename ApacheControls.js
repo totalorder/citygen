@@ -49,6 +49,7 @@ THREE.FirstPersonControls = function ( object, domElement ) {
     this.object.rotation.x = 0;
     this.object.rotation.y = 0;
     this.object.rotation.z = 0;
+    this.acceleration = new THREE.Vector3(0, 0, 0);
 
     this.mouseDragOn = false;
 
@@ -210,18 +211,18 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
         }
 
-        if ( this.heightSpeed ) {
-
-            var y = THREE.Math.clamp( this.object.position.y, this.heightMin, this.heightMax );
-            var heightDelta = y - this.heightMin;
-
-            this.autoSpeedFactor = delta * ( heightDelta * this.heightCoef );
-
-        } else {
-
-            this.autoSpeedFactor = 0.0;
-
-        }
+//        if ( this.heightSpeed ) {
+//
+//            var y = THREE.Math.clamp( this.object.position.y, this.heightMin, this.heightMax );
+//            var heightDelta = y - this.heightMin;
+//
+//            this.autoSpeedFactor = delta * ( heightDelta * this.heightCoef );
+//
+//        } else {
+//
+//            this.autoSpeedFactor = 0.0;
+//
+//        }
 
         var actualMoveSpeed = delta * this.movementSpeed;
 
@@ -264,14 +265,14 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
         }
 
-        var targetPosition = this.target,
-            position = this.object.position;
+//        var targetPosition = this.target,
+//            position = this.object.position;
 
-        targetPosition.x = position.x + 100 * Math.sin( this.phi ) * Math.cos( this.theta );
-        targetPosition.y = position.y + 100 * Math.cos( this.phi );
-        targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
+//        targetPosition.x = position.x + 100 * Math.sin( this.phi ) * Math.cos( this.theta );
+//        targetPosition.y = position.y + 100 * Math.cos( this.phi );
+//        targetPosition.z = position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
 
-        var rotationSpeed = 0.7;
+        var rotationSpeed = 0.5;
         if (this.moveForward) {
             this.object.rotateOnAxis(new THREE.Vector3(1, 0, 0), -rotationSpeed * delta);
 //            this.look.x += rotationSpeed * delta;
@@ -288,33 +289,48 @@ THREE.FirstPersonControls = function ( object, domElement ) {
         }
 
         if (this.panLeft) {
-            this.object.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotationSpeed * delta * 0.5);
+            this.object.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotationSpeed * delta);
 //            this.look.z += rotationSpeed * delta;
         } else if (this.panRight) {
-            this.object.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotationSpeed * delta * 0.5);
+            this.object.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotationSpeed * delta);
 //            this.look.z -= rotationSpeed * delta;
         }
 
         var throttleSpeed = 20;
         if (this.throttleUp) {
-            this.throttle += throttleSpeed * delta;
-            if (this.throttle > 50) {
-                this.throttle = 50;
-            }
+            this.throttle = 1.5;
+//            this.throttle += throttleSpeed * delta;
+//            if (this.throttle > 50) {
+//                this.throttle = 50;
+//            }
         } else {
-            this.throttle -= throttleSpeed * delta;
-            if (this.throttle < 0) {
-                this.throttle = 0;
-            }
+            this.throttle = 0;
+//            this.throttle -= throttleSpeed * delta;
+//            if (this.throttle < 0) {
+//                this.throttle = 0;
+//            }
         }
-        console.log(this.throttle);
+//        this.acceleration.y += this.throttle;
 
-        this.object.translateOnAxis(new THREE.Vector3(0, 1, 0), this.throttle * delta);
-        this.object.position.y -= delta * 10;
+//        console.log(this.throttle);
+            var norm = new THREE.Vector3(0, 1, 0).applyEuler(this.object.rotation);
+            var mult = norm.multiplyScalar(this.throttle * delta);
+            this.acceleration = this.acceleration.add(mult);
 
-        targetPosition.x = position.x + Math.sin( this.look.x ) * Math.cos( this.look.y );
-        targetPosition.y = position.y + Math.cos( this.look.x );
-        targetPosition.z = position.z + Math.sin( this.look.x ) * Math.sin( this.look.y );
+            norm = new THREE.Vector3(0, 1, 0).applyEuler(this.object.rotation);
+            mult = norm.multiplyScalar(delta * 0.3);
+            this.acceleration = this.acceleration.sub(mult);
+
+            this.acceleration.y -= 9.82 * 0.05 * delta;
+
+            this.object.position.add(this.acceleration);
+//            this.acceleration.multiplyScalar(this.throttle * delta);
+//        this.object.translateOnAxis(new THREE.Vector3(0, 1, 0), this.throttle * delta);
+//        this.object.position.y -= delta * 10;
+
+//        targetPosition.x = position.x + Math.sin( this.look.x ) * Math.cos( this.look.y );
+//        targetPosition.y = position.y + Math.cos( this.look.x );
+//        targetPosition.z = position.z + Math.sin( this.look.x ) * Math.sin( this.look.y );
 
 //          this.object.rotation.x = (this.look.x / 360) * 2*Math.PI;
 //          this.object.rotation.y = (this.look.y / 360) * 2*Math.PI;

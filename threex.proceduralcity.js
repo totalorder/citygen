@@ -38,7 +38,7 @@ THREEx.ProceduralCity	= function(){
 		buildingMesh.scale.y	= (Math.random() * Math.random() * Math.random() * buildingMesh.scale.x) * 8 + 8;
 		buildingMesh.scale.z	= buildingMesh.scale.x
 
-		if (i % 500 === 0) {
+		if (i % 10000 === 0) {
 			var spotLight = new THREE.PointLight( 0xffffff, 5, 100 );
 			spotLight.position.set(buildingMesh.position.x, buildingMesh.position.y, buildingMesh.position.z);
 			lights.push(spotLight);
