@@ -316,9 +316,15 @@ THREE.FirstPersonControls = function ( object, domElement ) {
             var norm = new THREE.Vector3(0, 1, 0).applyEuler(this.object.rotation);
             var mult = norm.multiplyScalar(this.throttle * delta);
             this.acceleration = this.acceleration.add(mult);
+
+            norm = new THREE.Vector3(0, 1, 0).applyEuler(this.object.rotation);
+            mult = norm.multiplyScalar(delta * 0.3);
+            this.acceleration = this.acceleration.sub(mult);
+
             this.acceleration.y -= 9.82 * 0.05 * delta;
 
             this.object.position.add(this.acceleration);
+//            this.acceleration.multiplyScalar(this.throttle * delta);
 //        this.object.translateOnAxis(new THREE.Vector3(0, 1, 0), this.throttle * delta);
 //        this.object.position.y -= delta * 10;
 
