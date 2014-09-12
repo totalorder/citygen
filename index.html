@@ -1,6 +1,7 @@
 <!doctype html>
 <script src='three.min.js'></script>
-<script src='FirstPersonControls.js'></script>
+<script src='ApacheControls.js'></script>
+<!--<script src='FirstPersonControls.js'></script>-->
 <script src='threex.proceduralcity.js'></script>
 <body style='margin: 0px; background-color: #d8e7ff; overflow: hidden;'><script>
 	var updateFcts	= [];
@@ -16,7 +17,7 @@
 	//////////////////////////////////////////////////////////////////////////////////
 
 	var camera		= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 3000)
-	camera.position.y	= 80
+	camera.position.y	= 50;
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		add an object and make it move					//
