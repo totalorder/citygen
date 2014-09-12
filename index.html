@@ -2,10 +2,10 @@
 <script src='three.min.js'></script>
 <script src='FirstPersonControls.js'></script>
 <script src='threex.proceduralcity.js'></script>
-<body style='margin: 0px; background-color: #d8e7ff; overflow: hidden;'><script>
+<body style='margin: 0px; background-color: #111133; overflow: hidden;'><script>
 	var updateFcts	= [];
 	var scene	= new THREE.Scene();
-	scene.fog	= new THREE.FogExp2( 0xd0e0f0, 0.0025 );
+	scene.fog	= new THREE.FogExp2( 0x151540, 0.0025 );
 
 	var renderer	= new THREE.WebGLRenderer( { antialias: false } );
 	renderer.setSize( window.innerWidth, window.innerHeight );
@@ -15,13 +15,13 @@
 	//		comment								//
 	//////////////////////////////////////////////////////////////////////////////////
 
-	var camera		= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 3000)
+	var camera		= new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.01, 3000)
 	camera.position.y	= 80
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		add an object and make it move					//
 	//////////////////////////////////////////////////////////////////////////////////		
-	var light	= new THREE.HemisphereLight( 0xfffff0, 0x101020, 1.25 );
+	var light	= new THREE.HemisphereLight( 0xfffff0, 0x101020, 0.35 );
 	light.position.set( 0.75, 1, 0.25 );
 	scene.add( light );
 
@@ -36,6 +36,9 @@
 	//////////////////////////////////////////////////////////////////////////////////
 	
 	var city	= new THREEx.ProceduralCity()
+	for( var iLights = 0; iLights < city.lights.length; iLights++) {
+		scene.add(city.lights[iLights]);
+	}
 	scene.add(city)
 	
 	

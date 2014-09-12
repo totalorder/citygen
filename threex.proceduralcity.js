@@ -24,9 +24,10 @@ THREEx.ProceduralCity	= function(){
 	// base colors for vertexColors. light is for vertices at the top, shaddow is for the ones at the bottom
 	var light	= new THREE.Color( 0xffffff )
 	var shadow	= new THREE.Color( 0x303050 )
-
+	var lights = [];
 	var cityGeometry= new THREE.Geometry();
 	for( var i = 0; i < 20000; i ++ ){
+
 		// put a random position
 		buildingMesh.position.x	= Math.floor( Math.random() * 200 - 100 ) * 10;
 		buildingMesh.position.z	= Math.floor( Math.random() * 200 - 100 ) * 10;
@@ -36,6 +37,12 @@ THREEx.ProceduralCity	= function(){
 		buildingMesh.scale.x	= Math.random() * Math.random() * Math.random() * Math.random() * 50 + 10;
 		buildingMesh.scale.y	= (Math.random() * Math.random() * Math.random() * buildingMesh.scale.x) * 8 + 8;
 		buildingMesh.scale.z	= buildingMesh.scale.x
+
+		if (i % 500 === 0) {
+			var spotLight = new THREE.PointLight( 0xffffff, 5, 100 );
+			spotLight.position.set(buildingMesh.position.x, buildingMesh.position.y, buildingMesh.position.z);
+			lights.push(spotLight);
+		}
 
 		// establish the base color for the buildingMesh
 		var value	= 1 - Math.random() * Math.random();
@@ -69,6 +76,7 @@ THREEx.ProceduralCity	= function(){
 		vertexColors	: THREE.VertexColors
 	});
 	var mesh = new THREE.Mesh(cityGeometry, material );
+	mesh.lights = lights;
 	return mesh
 
 	function generateTextureCanvas(){
@@ -83,8 +91,8 @@ THREEx.ProceduralCity	= function(){
 		// draw the window rows - with a small noise to simulate light variations in each room
 		for( var y = 2; y < 64; y += 2 ){
 			for( var x = 0; x < 32; x += 2 ){
-				var value	= Math.floor( Math.random() * 64 );
-				context.fillStyle = 'rgb(' + [value, value, value].join( ',' )  + ')';
+				var value	= Math.floor( Math.random() * 255 );
+				context.fillStyle = 'rgb(' + [value, value, 00].join( ',' )  + ')';
 				context.fillRect( x, y, 2, 1 );
 			}
 		}
