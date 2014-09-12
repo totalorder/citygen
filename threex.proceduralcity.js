@@ -26,7 +26,7 @@ THREEx.ProceduralCity	= function(){
 	var shadow	= new THREE.Color( 0x303050 )
 	var lights = [];
 	var cityGeometry= new THREE.Geometry();
-	for( var i = 0; i < 20000; i ++ ){
+	for( var i = 0; i < 5000; i ++ ){
 
 		// put a random position
 		buildingMesh.position.x	= Math.floor( Math.random() * 200 - 100 ) * 10;
