@@ -20,7 +20,7 @@
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		add an object and make it move					//
-	//////////////////////////////////////////////////////////////////////////////////		
+	//////////////////////////////////////////////////////////////////////////////////
 	var light	= new THREE.HemisphereLight( 0xfffff0, 0x101020, 0.35 );
 	light.position.set( 0.75, 1, 0.25 );
 	scene.add( light );
@@ -34,32 +34,68 @@
 	//////////////////////////////////////////////////////////////////////////////////
 	//		comment								//
 	//////////////////////////////////////////////////////////////////////////////////
-	
+
 	var city	= new THREEx.ProceduralCity()
-	for( var iLights = 0; iLights < city.lights.length; iLights++) {
-		scene.add(city.lights[iLights]);
-	}
-	scene.add(city)
-	
-	
+    for( var iLights = 0; iLights < city.lights.length; iLights++) {
+        scene.add(city.lights[iLights]);
+    }
+	scene.add(city);
+
+	var addNeighbouringCityParts = function (x, z) {
+		function addNewCityPart(x, z) {
+			var newcity = new THREE.Mesh(city.geometry, city.material);
+			newcity.position.x = x * 2000;
+			newcity.position.z = z * 2000;
+			scene.add(newcity)
+		}
+
+		for (var i = scene.children.length - 1; i >= 2 + city.lights.length; i--) {
+			var child = scene.children[i];
+			scene.remove(child);
+		}
+		for (var i = -1; i <= 1; i++) {
+			for (var j = -1; j <= 1; j++) {
+				addNewCityPart(i + x, j + z);
+			}
+		}
+	};
+
+	addNeighbouringCityParts(0, 0);
+
+
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Camera Controls							//
 	//////////////////////////////////////////////////////////////////////////////////
 	var controls	= new THREE.FirstPersonControls( camera );
-	controls.movementSpeed	= 20;
+	controls.movementSpeed	= 70;
 	controls.lookSpeed	= 0.05;
 	controls.lookVertical	= true;
 	updateFcts.push(function(delta, now){
-		controls.update( delta );		
+		controls.update( delta );
 	})
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		render the scene						//
 	//////////////////////////////////////////////////////////////////////////////////
 	updateFcts.push(function(){
-		renderer.render( scene, camera );		
+		renderer.render( scene, camera );
 	})
-	
+
+	var lastPosition = {x: 0, z: 0};
+	updateFcts.push(function () {
+		var cameraX = camera.position.x;
+		var cameraZ = camera.position.z;
+		var x = Math.round((cameraX / 2000));
+		var z = Math.round((cameraZ / 2000));
+
+
+		if (x != lastPosition.x || z != lastPosition.z) {
+			addNeighbouringCityParts(x, z);
+		}
+		lastPosition.x = x;
+		lastPosition.z = z;
+	});
+
 	//////////////////////////////////////////////////////////////////////////////////
 	//		loop runner							//
 	//////////////////////////////////////////////////////////////////////////////////
